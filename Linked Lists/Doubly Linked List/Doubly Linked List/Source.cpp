@@ -184,9 +184,6 @@ void Doubly_Llist::obrisi_duplikate() {
 int main() {
 
 	Doubly_Llist l;
-	l.set();
-	l.obrisi_duplikate();
-	l.print();
 
 	system("pause");
 	return 0;
