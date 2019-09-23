@@ -105,7 +105,8 @@ int Tree::count_unival_subtrees(node *x) {
 		count_unival_subtrees(x->left);
 		count_unival_subtrees(x->right);
 		if (x->left&&x->right) {
-			if (x->key == x->left->key && x->key == x->right->key) {
+			//Kljucni uslov, uocavamo relaciju tranzitivnosti
+			if (x->key == x->left->key && x->left->key == x->right->key) {
 				br++;
 			}
 		}
@@ -119,7 +120,7 @@ int main() {
 
 	Tree t;
 	t.create();
-	cout << "Broj univerzalnih binarnih stabala je: "; t.count_unival_subtrees(t.root) << endl;
+	cout << "Broj univerzalnih binarnih stabala je: "<<t.count_unival_subtrees(t.root)<< endl;
 	system("pause");
 	return 0;
 }
