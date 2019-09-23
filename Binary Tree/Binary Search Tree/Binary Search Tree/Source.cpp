@@ -69,6 +69,7 @@ int main() {
 	Tree t;
 	t.create_bst();
 	t.print_inorder(t.root);
+	t.print_inorder(t.root);
 	//Nastavi dalje
 	system("pause");
 	return 0;
