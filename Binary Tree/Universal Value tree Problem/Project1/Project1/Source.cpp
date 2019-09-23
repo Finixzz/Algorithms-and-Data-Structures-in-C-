@@ -67,8 +67,8 @@ public:
 			free(x);
 		}
 	}
-
 	void create();
+	int count_unival_subtrees(node *x);
 };
 void Tree::create() {
 	node *t, *p;
@@ -99,11 +99,27 @@ void Tree::create() {
 		}
 	}
 }
+int Tree::count_unival_subtrees(node *x) {
+	static int br = 0;
+	if (x) {
+		count_unival_subtrees(x->left);
+		count_unival_subtrees(x->right);
+		if (x->left&&x->right) {
+			if (x->key == x->left->key && x->key == x->right->key) {
+				br++;
+			}
+		}
+		if (!x->left && !x->right)
+			br++;
+		return br;
+	}
+	return 0;
+}
 int main() {
 
 	Tree t;
 	t.create();
-
+	cout << "Broj univerzalnih binarnih stabala je: "; t.count_unival_subtrees(t.root) << endl;
 	system("pause");
 	return 0;
 }
