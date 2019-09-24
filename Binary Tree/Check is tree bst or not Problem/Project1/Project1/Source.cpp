@@ -1,26 +1,36 @@
 #include<iostream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
+/*
+            PROBLEM
+Input nodes of binary tree and check
+weather or not is inputted binary tree
+binary search tree or not
+*/
+
 struct node {
-	node *left;
+	node* left;
 	int key;
-	node *right;
+	node* right;
 };
+
 class Queue {
 private:
 	int front, rear, size;
-	node **Q;
+	node** Q;
 public:
 	Queue() :
 		front{ -1 }, rear{ -1 }, size{ 100 }, Q{ nullptr }{
-		Q = new node*[size];
+		Q = new node *[size];
 	}
 	~Queue() {
 		delete[]Q; Q = nullptr;
 	}
 
-	void enqueue(node *x) {
+	void enqueue(node * x) {
 		if (rear == size - 1) {
 			cout << "Queue is full! " << endl;
 		}
@@ -30,8 +40,8 @@ public:
 		}
 	}
 
-	node *dequeue() {
-		node *x = nullptr;
+	node * dequeue() {
+		node* x = nullptr;
 		if (front == size - 1) {
 			cout << "Queue is empty! " << endl;
 		}
@@ -48,15 +58,15 @@ public:
 };
 class Tree {
 public:
-	node *root;
+	node* root;
 	Queue q;
-
+	vector<int> v;
 	Tree() :
 		root{ nullptr }, q{}{}
 	~Tree() {
 		oslobodi_memoriju(root);
 	}
-	void oslobodi_memoriju(node *x) {
+	void oslobodi_memoriju(node* x) {
 		if (x) {
 			oslobodi_memoriju(x->left);
 			oslobodi_memoriju(x->right);
@@ -65,7 +75,7 @@ public:
 	}
 
 	void create() {
-		node *t, *p;
+		node* t, *p;
 		int x;
 		root = new node;
 		cout << "Unesite root vrijednost: "; cin >> root->key;
@@ -94,37 +104,21 @@ public:
 		}
 	}
 
-	int count_height(node *x) {
-		static int br = 0;
-		static int br2 = 0;
+	void push_vector(node* x) {
 		if (x) {
-			count_height(x->left);
-			count_height(x->right);
-			if (x->left)br++;
-			if (x->right)br2++;
-			if (br > br2)return br;
-			else return br2;
+			push_vector(x->left);
+			v.push_back(x->key);
+			push_vector(x->right);
 		}
 	}
-
-	bool is_bst(node *x) {
-		static int br = 0;
-		if (x) {
-			is_bst(x->left);
-			if (x->left) {
-				if (x->left->key > x->key)
-					br++;
-			}
-			if (x->right) {
-				if (x->right->key < x->key) {
-					br++;
-				}
-			}
-			is_bst(x->right);
-			if (br)return false;
-			else return true;
+	void is_bst() {
+		push_vector(root);
+		if (is_sorted(begin(v), end(v))) {
+			cout << "Jeste" << endl;
 		}
-		return 0;
+		else {
+			cout << "Nije" << endl;
+		}
 	}
 };
 
@@ -132,12 +126,8 @@ int main() {
 
 	Tree t;
 	t.create();
-	if (t.is_bst(t.root)) {
-		cout << "Jeste" << endl;
-	}
-	else {
-		cout << "Nije " << endl;
-	}
+	t.is_bst();
+
 	system("pause");
 	return 0;
 }
