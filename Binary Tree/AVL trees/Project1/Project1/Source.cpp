@@ -48,7 +48,6 @@ public:
 	node *LRrotation(node *x) {
 		node *l = x->left;
 		node *lr = l->right;
-
 		l->right = lr->left;
 		x->left = lr->right;
 		lr->left = l;
@@ -66,14 +65,27 @@ public:
 	node *RLrotation(node *x) {
 		node *r = x->right;
 		node *rl = r->left;
-
 		r->left = rl->right;
 		x->right = rl->left;
 		rl->left = x;
 		rl->right = r;
-
 		root = rl;
 		return rl;
+	}
+	node *Balance(node *x) {
+		if (balance_factor(x) == 2 && balance_factor(x->left) == 1) {
+			return LLrotation(x);
+		}
+		if (balance_factor(x) == -2 && balance_factor(x->right) == -1) {
+			return RRrotation(x);
+		}
+		if (balance_factor(x) == 2 && balance_factor(x->left) == -1) {
+			return LRrotation(x);
+		}
+		if (balance_factor(x) == -2 && balance_factor(x->right) == 1) {
+			return RLrotation(x);
+		}
+		return x;
 	}
 	node *insert_node(node *x, int key) {
 		if (x == nullptr) {
@@ -89,19 +101,7 @@ public:
 		else
 			x->right = insert_node(x->right, key);
 
-		if (balance_factor(x) == 2 && balance_factor(x->left) == 1) {
-			return LLrotation(x);
-		}
-		if (balance_factor(x) == -2 && balance_factor(x->right) == -1) {
-			return RRrotation(x);
-		}
-		if (balance_factor(x) == 2 && balance_factor(x->left) == -1) {
-			return LRrotation(x);
-		}
-		if (balance_factor(x) == -2 && balance_factor(x->right) == 1) {
-			return RLrotation(x);
-		}
-		return x;
+		return Balance(x);
 	}
 
 	void print_inorder(node *x) {
