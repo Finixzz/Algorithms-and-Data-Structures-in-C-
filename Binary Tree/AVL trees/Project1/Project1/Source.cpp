@@ -12,8 +12,8 @@ class Tree {
 public:
 	node *root;
 
-	Tree():
-		root{nullptr}{}
+	Tree() :
+		root{ nullptr } {}
 	~Tree() {
 		oslobodi_memoriju(root);
 	}
@@ -24,7 +24,7 @@ public:
 			free(x);
 		}
 	}
-	
+
 	int count_height(node *x) {
 		if (x) {
 			return max(count_height(x->left), count_height(x->right)) + 1;
@@ -38,19 +38,23 @@ public:
 		return 0;
 	}
 
-	void print_bf(node *x) {
-		if (x) {
-			print_bf(x->left);
-			cout << balance_factor(x) << " ";
-			print_bf(x->right);
-		}
-	}
 	node *LLrotation(node *x) {
 		node *t = x->left;
 		x->left = t->right;
 		t->right = x;
 		root = t;
 		return t;
+	}
+	node *LRrotation(node *x) {
+		node *l = x->left;
+		node *lr = x->left->right;
+
+		l->right = lr->left;
+		x->left = lr->right;
+		lr->left = l;
+		lr->right = x;
+		root = lr;
+		return lr;
 	}
 	node *RRrotation(node *x) {
 		node *t = x->right;
@@ -59,7 +63,7 @@ public:
 		root = t;
 		return t;
 	}
-	node * insert_node(node *x,int key) {
+	node *insert_node(node *x, int key) {
 		if (x == nullptr) {
 			x = new node;
 			x->key = key;
@@ -69,15 +73,18 @@ public:
 		if (key == x->key)
 			return 0;
 		else if (key < x->key)
-			x->left=insert_node(x->left,key);
+			x->left = insert_node(x->left, key);
 		else
-			x->right=insert_node(x->right, key);
+			x->right = insert_node(x->right, key);
 
 		if (balance_factor(x) == 2 && balance_factor(x->left) == 1) {
 			return LLrotation(x);
 		}
 		if (balance_factor(x) == -2 && balance_factor(x->right) == -1) {
 			return RRrotation(x);
+		}
+		if (balance_factor(x) == 2 && balance_factor(x->left) == -1) {
+			return LRrotation(x);
 		}
 		return x;
 	}
@@ -104,7 +111,7 @@ int main() {
 		if (key == -1)break;
 		t.insert_node(t.root, key);
 	}
-	cout << "Preorder: "; t.print_inorder(t.root); cout << endl;
+	cout << "Inorder: "; t.print_inorder(t.root); cout << endl;
 	system("pause");
 	return 0;
 }
