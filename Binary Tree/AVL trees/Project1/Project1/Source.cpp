@@ -47,7 +47,7 @@ public:
 	}
 	node *LRrotation(node *x) {
 		node *l = x->left;
-		node *lr = x->left->right;
+		node *lr = l->right;
 
 		l->right = lr->left;
 		x->left = lr->right;
@@ -62,6 +62,18 @@ public:
 		t->left = x;
 		root = t;
 		return t;
+	}
+	node *RLrotation(node *x) {
+		node *r = x->right;
+		node *rl = r->left;
+
+		r->left = rl->right;
+		x->right = rl->left;
+		rl->left = x;
+		rl->right = r;
+
+		root = rl;
+		return rl;
 	}
 	node *insert_node(node *x, int key) {
 		if (x == nullptr) {
@@ -86,6 +98,9 @@ public:
 		if (balance_factor(x) == 2 && balance_factor(x->left) == -1) {
 			return LRrotation(x);
 		}
+		if (balance_factor(x) == -2 && balance_factor(x->right) == 1) {
+			return RLrotation(x);
+		}
 		return x;
 	}
 
@@ -94,6 +109,13 @@ public:
 			print_inorder(x->left);
 			cout << x->key << " ";
 			print_inorder(x->right);
+		}
+	}
+	void print_balance_factor(node *x) {
+		if (x) {
+			print_balance_factor(x->left);
+			cout << balance_factor(x) << " ";
+			print_balance_factor(x->right);
 		}
 	}
 };
@@ -112,6 +134,7 @@ int main() {
 		t.insert_node(t.root, key);
 	}
 	cout << "Inorder: "; t.print_inorder(t.root); cout << endl;
+	cout << "Inorder balance faktori: "; t.print_balance_factor(t.root); cout << endl;
 	system("pause");
 	return 0;
 }
