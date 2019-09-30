@@ -119,7 +119,7 @@ public:
 		}
 	}
 	bool search(node *x,int key) {
-		if (x) {
+		while (x) {
 			if (key == x->key)
 				return true;
 			else if (key < x->key)
