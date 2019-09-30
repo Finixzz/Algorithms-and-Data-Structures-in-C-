@@ -24,83 +24,32 @@ public:
 			free(x);
 		}
 	}
-
 	int count_height(node *x) {
-		if (x) {
-			return max(count_height(x->left), count_height(x->right)) + 1;
-		}
+		if (x) return max(count_height(x->left), count_height(x->right)) + 1;
 		return 0;
 	}
 	int balance_factor(node *x) {
-		if (x) {
-			return count_height(x->left) - count_height(x->right);
-		}
+		if (x) return count_height(x->left) - count_height(x->right);
 		return 0;
 	}
+	node *LLrotation(node *x);
+	node *RRrotation(node *x);
+	node *LRrotation(node *x);
+	node *RLrotation(node *x);
+	node *Balance(node *x);
 
-	node *LLrotation(node *x) {
-		node *t = x->left;
-		x->left = t->right;
-		t->right = x;
-		root = t;
-		return t;
-	}
-	node *LRrotation(node *x) {
-		node *l = x->left;
-		node *lr = l->right;
-		l->right = lr->left;
-		x->left = lr->right;
-		lr->left = l;
-		lr->right = x;
-		root = lr;
-		return lr;
-	}
-	node *RRrotation(node *x) {
-		node *t = x->right;
-		x->right = t->left;
-		t->left = x;
-		root = t;
-		return t;
-	}
-	node *RLrotation(node *x) {
-		node *r = x->right;
-		node *rl = r->left;
-		r->left = rl->right;
-		x->right = rl->left;
-		rl->left = x;
-		rl->right = r;
-		root = rl;
-		return rl;
-	}
-	node *Balance(node *x) {
-		if (balance_factor(x) == 2 && balance_factor(x->left) == 1) {
-			return LLrotation(x);
-		}
-		if (balance_factor(x) == -2 && balance_factor(x->right) == -1) {
-			return RRrotation(x);
-		}
-		if (balance_factor(x) == 2 && balance_factor(x->left) == -1) {
-			return LRrotation(x);
-		}
-		if (balance_factor(x) == -2 && balance_factor(x->right) == 1) {
-			return RLrotation(x);
-		}
-		return x;
-	}
 	node *insert_node(node *x, int key) {
+		node *t;
 		if (x == nullptr) {
-			x = new node;
-			x->key = key;
-			x->left = x->right = nullptr;
-			return x;
+			t = new node;
+			t->key = key;
+			t->left = t->right = nullptr;
+			return t;
 		}
-		if (key == x->key)
-			return 0;
-		else if (key < x->key)
+		if (key < x->key)
 			x->left = insert_node(x->left, key);
-		else
+		else if (key > x->key)
 			x->right = insert_node(x->right, key);
-
 		return Balance(x);
 	}
 
@@ -111,6 +60,7 @@ public:
 			print_inorder(x->right);
 		}
 	}
+
 	void print_balance_factor(node *x) {
 		if (x) {
 			print_balance_factor(x->left);
@@ -119,10 +69,59 @@ public:
 		}
 	}
 };
+node *Tree::LLrotation(node *x) {
+	node *l = x->left;
+	x->left = l->right;
+	l->right = x;
+	root = l;
+	return l;
+}
+node *Tree::RRrotation(node *x) {
+	node *r = x->right;
+	x->right = r->left;
+	r->left = x;
+	root = r;
+	return r;
+}
+node *Tree::LRrotation(node *x) {
+	node *l = x->left;
+	node *lr = l->right;
 
+	l->right = lr->left;
+	x->left = lr->right;
+	lr->left = l;
+	lr->right = x;
+	root = lr;
+	return lr;
+}
+node *Tree::RLrotation(node *x) {
+	node *r = x->right;
+	node *rl = r->left;
+
+	x->right = rl->left;
+	r->left = rl->right;
+	rl->left = x;
+	rl->right = r;
+	root = rl;
+	return rl;
+}
+node *Tree::Balance(node *x) {
+	if (balance_factor(x) == 2 && balance_factor(x->left) == 1) {
+		return LLrotation(x);
+	}
+	if (balance_factor(x) == -2 && balance_factor(x->right) == -1) {
+		return RRrotation(x);
+	}
+	if (balance_factor(x) == 2 && balance_factor(x->left) == -1) {
+		return LRrotation(x);
+	}
+	if (balance_factor(x) == -2 && balance_factor(x->right) == 1) {
+		return RLrotation(x);
+	}
+	return x;
+}
 
 int main() {
-
 
 	Tree t;
 	int key = 0;
@@ -135,6 +134,7 @@ int main() {
 	}
 	cout << "Inorder: "; t.print_inorder(t.root); cout << endl;
 	cout << "Inorder balance faktori: "; t.print_balance_factor(t.root); cout << endl;
+
 	system("pause");
 	return 0;
 }
