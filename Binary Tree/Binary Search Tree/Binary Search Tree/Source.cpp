@@ -57,6 +57,10 @@ public:
 			insert_node(key);
 		}
 	}
+	int count_height(node *x) {
+		if (x)return max(count_height(x->left), count_height(x->right)) + 1;
+		return 0;
+	}
 	node *InPre(node *x) {
 		while (x&&x->right) {
 			x = x->right;
@@ -137,10 +141,6 @@ public:
 		else {
 			cout << "Vrh se ne nalazi u binarnom stablu\n";
 		}
-	}
-	int count_height(node *x) {
-		if (x)return max(count_height(x->left), count_height(x->right)) + 1;
-		return 0;
 	}
 };
 
