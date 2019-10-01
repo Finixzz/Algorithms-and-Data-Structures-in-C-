@@ -1,4 +1,5 @@
 #include<iostream>
+#include<algorithm>	
 
 using namespace std;
 
@@ -67,42 +68,39 @@ public:
 			x = x->left;
 		return x;
 	}
-	node * delete_node(node *x, int key) {
-		node *t = nullptr;
-		if (x == nullptr) {
-			return 0;
-		}
-		if (!x->left && !x->right) {
-			if (x == root) {
-				root = nullptr;
-				free(x);
-				return 0;
-		}
+	node* delete_node(node *x, int key)
+	{
+		node *q;
+		if (x == nullptr)return NULL;
 
+		if (x->left == NULL && x->right == NULL){
+			if (x == root)
+				root = NULL;
+			free(x);
+			return NULL;
+		}
 		if (key < x->key)
-			x->left=delete_node(x->left, key);
-		else if (key > x->key) {
-			x->right=delete_node(x->right, key);
-		}
-		else {
-			if (count_height(x->left) > count_height(x->right)) {
-				t = InPre(x->left);
-				x->key = t->key;
-				x->left = delete_node(x->left, t->key);
+			x->left = delete_node(x->left, key);
+		else if (key > x->key)
+			x->right = delete_node(x->right, key);
+		else{
+			if (count_height(x->left) > count_height(x->right)){
+				q = InPre(x->left);
+				x->key = q->key;
+				x->left = delete_node(x->left, q->key);
 			}
-			else {
-				t = InSucc(x->right);
-				x->key = t->key;
-				x->right = delete_node(x->left, t->key);
-				}
+			else{
+				q = InSucc(x->right);
+				x->key = q->key;
+				x->right = delete_node(x->right, q->key);
 			}
 		}
-		return t;
+		return x;
 	}
 	void Delete() {
 		int key;
 		cout << "Unesite vrijednost vrha za brisanje istog: "; cin >> key;
-		cout << delete_node(root, key) << endl;
+		delete_node(root, key);
 	}
 	void print_inorder(node *x) {
 		if (x) {
@@ -141,15 +139,7 @@ public:
 		}
 	}
 	int count_height(node *x) {
-		static int br = 0;
-		static int br2 = 0;
-		if (x) {
-			count_height(x->left);
-			count_height(x->right);
-			if (x->left)br++;
-			if (x->right)br2++;
-			return br > br2 ? br : br2;
-		}
+		if (x)return max(count_height(x->left), count_height(x->right)) + 1;
 		return 0;
 	}
 };
@@ -158,9 +148,12 @@ int main() {
 
 	Tree t;
 	t.create_bst();
+	cout << "Inorder: "; t.print_inorder(t.root); cout << endl;
 	t.Delete();
+	cout << "Inorder nakon brisanja clana: "; t.print_inorder(t.root); cout << endl;
 	t.binary_search();
 
+	
 	system("pause");
 	return 0;
 }
