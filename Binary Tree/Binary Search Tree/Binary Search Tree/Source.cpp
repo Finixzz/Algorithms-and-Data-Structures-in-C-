@@ -72,14 +72,10 @@ public:
 			x = x->left;
 		return x;
 	}
-	node* delete_node(node *x, int key)
-	{
+	node *delete_node(node *x, int key) {
 		node *q;
-		if (x == nullptr)return NULL;
-
-		if (x->left == NULL && x->right == NULL){
-			if (x == root)
-				root = NULL;
+		if (!x->left && !x->right) {
+			if (x == root)root = nullptr;
 			free(x);
 			return NULL;
 		}
@@ -87,24 +83,32 @@ public:
 			x->left = delete_node(x->left, key);
 		else if (key > x->key)
 			x->right = delete_node(x->right, key);
-		else{
-			if (count_height(x->left) > count_height(x->right)){
+		else {
+			if (count_height(x->left) > count_height(x->right)) {
 				q = InPre(x->left);
 				x->key = q->key;
 				x->left = delete_node(x->left, q->key);
 			}
-			else{
+			else {
 				q = InSucc(x->right);
 				x->key = q->key;
 				x->right = delete_node(x->right, q->key);
 			}
-		}
+		}	
 		return x;
 	}
 	void Delete() {
 		int key;
 		cout << "Unesite vrijednost vrha za brisanje istog: "; cin >> key;
-		delete_node(root, key);
+		if (search(root, key)) {
+			delete_node(root, key);
+			cout << "Inorder nakon brisanja clana: "; print_inorder(root); cout << endl;
+			binary_search();
+		}
+		else {
+			cout << "Uneseni vrh ne postoji! " << endl;
+		}
+
 	}
 	void print_inorder(node *x) {
 		if (x) {
@@ -150,8 +154,6 @@ int main() {
 	t.create_bst();
 	cout << "Inorder: "; t.print_inorder(t.root); cout << endl;
 	t.Delete();
-	cout << "Inorder nakon brisanja clana: "; t.print_inorder(t.root); cout << endl;
-	t.binary_search();
 
 	
 	system("pause");
