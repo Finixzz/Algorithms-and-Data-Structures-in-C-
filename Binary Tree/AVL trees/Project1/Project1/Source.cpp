@@ -17,21 +17,10 @@ public:
 	~Tree() {
 		oslobodi_memoriju(root);
 	}
-	void oslobodi_memoriju(node *x) {
-		if (x) {
-			oslobodi_memoriju(x->left);
-			oslobodi_memoriju(x->right);
-			free(x);
-		}
-	}
-	int count_height(node *x) {
-		if (x) return max(count_height(x->left), count_height(x->right)) + 1;
-		return 0;
-	}
-	int balance_factor(node *x) {
-		if (x) return count_height(x->left) - count_height(x->right);
-		return 0;
-	}
+	void oslobodi_memoriju(node *x);
+
+	int count_height(node *x);
+	int balance_factor(node *x);
 	node *LLrotation(node *x);
 	node *RRrotation(node *x);
 	node *LRrotation(node *x);
@@ -46,41 +35,45 @@ public:
 			t->left = t->right = nullptr;
 			return t;
 		}
-		if (key < x->key)
+		if (key < x->key) 
 			x->left = insert_node(x->left, key);
-		else if (key > x->key)
+		else if (key > x->key) 
 			x->right = insert_node(x->right, key);
 		return Balance(x);
 	}
 
-	void print_inorder(node *x) {
-		if (x) {
-			print_inorder(x->left);
-			cout << x->key << " ";
-			print_inorder(x->right);
-		}
-	}
-
-	void print_balance_factor(node *x) {
-		if (x) {
-			print_balance_factor(x->left);
-			cout << balance_factor(x) << " ";
-			print_balance_factor(x->right);
-		}
-	}
+	void print_inorder(node *x);
+	void print_balance_factor(node *x);
 };
+void Tree::oslobodi_memoriju(node *x) {
+	if (x) {
+		oslobodi_memoriju(x->left);
+		oslobodi_memoriju(x->right);
+		free(x);
+	}
+}
+int Tree::count_height(node *x) {
+	if (x) return max(count_height(x->left), count_height(x->right)) + 1;
+	return 0;
+}
+int Tree::balance_factor(node *x) {
+	if (x) return count_height(x->left) - count_height(x->right);
+	return 0;
+}
 node *Tree::LLrotation(node *x) {
 	node *l = x->left;
 	x->left = l->right;
 	l->right = x;
-	root = l;
+
+	if(root==x)root = l;
 	return l;
 }
 node *Tree::RRrotation(node *x) {
 	node *r = x->right;
 	x->right = r->left;
 	r->left = x;
-	root = r;
+
+	if(root==x)root = r;
 	return r;
 }
 node *Tree::LRrotation(node *x) {
@@ -91,7 +84,8 @@ node *Tree::LRrotation(node *x) {
 	x->left = lr->right;
 	lr->left = l;
 	lr->right = x;
-	root = lr;
+
+	if(root==x)root = lr;
 	return lr;
 }
 node *Tree::RLrotation(node *x) {
@@ -102,23 +96,34 @@ node *Tree::RLrotation(node *x) {
 	r->left = rl->right;
 	rl->left = x;
 	rl->right = r;
-	root = rl;
+
+	if(root==x)root = rl;
 	return rl;
 }
 node *Tree::Balance(node *x) {
-	if (balance_factor(x) == 2 && balance_factor(x->left) == 1) {
+	if (balance_factor(x) == 2 && balance_factor(x->left) == 1) 
 		return LLrotation(x);
-	}
-	if (balance_factor(x) == -2 && balance_factor(x->right) == -1) {
+	else if (balance_factor(x) == -2 && balance_factor(x->right) == -1) 
 		return RRrotation(x);
-	}
-	if (balance_factor(x) == 2 && balance_factor(x->left) == -1) {
+	else if (balance_factor(x) == 2 && balance_factor(x->left) == -1) 
 		return LRrotation(x);
-	}
-	if (balance_factor(x) == -2 && balance_factor(x->right) == 1) {
+	else if (balance_factor(x) == -2 && balance_factor(x->right) == 1) 
 		return RLrotation(x);
+	else return x;
+}
+void Tree::print_inorder(node *x) {
+	if (x) {
+		print_inorder(x->left);
+		cout << x->key << " ";
+		print_inorder(x->right);
 	}
-	return x;
+}
+void Tree::print_balance_factor(node *x) {
+	if (x) {
+		print_balance_factor(x->left);
+		cout << balance_factor(x) << " ";
+		print_balance_factor(x->right);
+	}
 }
 
 int main() {
