@@ -21,6 +21,8 @@ public:
 
 	int count_height(node *x);
 	int balance_factor(node *x);
+	bool search(int key);
+
 	node *LLrotation(node *x);
 	node *RRrotation(node *x);
 	node *LRrotation(node *x);
@@ -42,6 +44,20 @@ public:
 		return Balance(x);
 	}
 
+	node *inPre(node *x);
+	node *inSucc(node *x);
+	node *Delete(node *x, int key);
+	void delete_node() {
+		int key;
+		cout << "Unesite vrijednost vrha za njegovo brisanje: "; cin >> key;
+		if (search(key)) {
+			Delete(root, key);
+			cout << "Inorder nakon brisanja: "; print_inorder(root); cout << endl;
+		}
+		else 
+			cout << "Unesena vrijednost se ne nalazi u AVL stablu! " << endl;
+	}
+
 	void print_inorder(node *x);
 	void print_balance_factor(node *x);
 };
@@ -59,6 +75,18 @@ int Tree::count_height(node *x) {
 int Tree::balance_factor(node *x) {
 	if (x) return count_height(x->left) - count_height(x->right);
 	return 0;
+}
+bool Tree::search(int key) {
+	node *x = root;
+	while (x) {
+		if (key==x->key)
+			return true;
+		else if (key < x->key)
+			x = x->left;
+		else
+			x = x->right;
+	}
+	return false;
 }
 node *Tree::LLrotation(node *x) {
 	node *l = x->left;
@@ -101,15 +129,54 @@ node *Tree::RLrotation(node *x) {
 	return rl;
 }
 node *Tree::Balance(node *x) {
-	if (balance_factor(x) == 2 && balance_factor(x->left) == 1) 
+	if (balance_factor(x) == 2 && balance_factor(x->left) == 1)
 		return LLrotation(x);
-	else if (balance_factor(x) == -2 && balance_factor(x->right) == -1) 
+	else if (balance_factor(x) == -2 && balance_factor(x->right) == -1)
 		return RRrotation(x);
-	else if (balance_factor(x) == 2 && balance_factor(x->left) == -1) 
+	else if (balance_factor(x) == 2 && balance_factor(x->left) == -1)
 		return LRrotation(x);
-	else if (balance_factor(x) == -2 && balance_factor(x->right) == 1) 
+	else if (balance_factor(x) == -2 && balance_factor(x->right) == 1)
+		return RLrotation(x);
+	else if (balance_factor(x) == 2 && balance_factor(x->left) == 0)//L0rotation
+		return LRrotation(x);
+	else if (balance_factor(x) == -2 && balance_factor(x->right) == 0)//ROrotation
 		return RLrotation(x);
 	else return x;
+}
+node *Tree::inPre(node *x) {
+	if (x&&x->right)
+		x = x->right;
+	return x;
+}
+node *Tree::inSucc(node *x) {
+	if (x&&x->left)
+		x = x->left;
+	return x;
+}
+node *Tree::Delete(node *x, int key) {
+	node *q;
+	if (!x->left && !x->right) {
+		if (x == root)root = nullptr;
+		free(x);
+		return NULL;
+	}
+	if (key < x->key)
+		x->left = Delete(x->left, key);
+	else if (key > x->key)
+		x->right = Delete(x->right, key);
+	else {
+		if (count_height(x->left) > count_height(x->right)) {
+			q = inPre(x->left);
+			x->key = q->key;
+			x->left = Delete(x->left, q->key);
+		}
+		else {
+			q = inSucc(x->right);
+			x->key = q->key;
+			x->right = Delete(x->right, q->key);
+		}
+	}
+	return Balance(x);
 }
 void Tree::print_inorder(node *x) {
 	if (x) {
@@ -139,6 +206,7 @@ int main() {
 	}
 	cout << "Inorder: "; t.print_inorder(t.root); cout << endl;
 	cout << "Inorder balance faktori: "; t.print_balance_factor(t.root); cout << endl;
+	t.delete_node();
 
 	system("pause");
 	return 0;
