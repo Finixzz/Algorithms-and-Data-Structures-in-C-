@@ -5,8 +5,8 @@ using namespace std;
 template<class T>
 class Array {
 public:
-	T size;
-	T len;
+	int size;
+	int len;
 	T *A;
 
 	Array():size{ 0 }, len{ 0 }, A{ nullptr }{}
@@ -20,8 +20,8 @@ public:
 	void create_arr();
 	void set();
 	void print();
-	void append(int novi_clan);
-	void insert(int index, int novi_clan);
+	void append(T novi_clan);
+	void insert(int index, T novi_clan);
 	void Delete(int index);
 
 	bool l_search(int clan);
@@ -56,7 +56,7 @@ void Array<T>::print() {
 	cout << endl;
 }
 template<class T>
-void Array<T>::append(int novi_clan) {
+void Array<T>::append(T novi_clan) {
 	if (len == size)
 		cout << "Niz je popunjen! " << endl;
 	else {
@@ -65,7 +65,7 @@ void Array<T>::append(int novi_clan) {
 	}
 }
 template<class T>
-void Array<T>::insert(int index, int novi_clan) {
+void Array<T>::insert(int index,T novi_clan) {
 	if (len == size)
 		cout << "Niz je popunjen! " << endl;
 	else {
