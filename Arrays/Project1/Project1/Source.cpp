@@ -24,9 +24,9 @@ public:
 	void insert(int index, T novi_clan);
 	void Delete(int index);
 
-	bool l_search(int clan);
-	bool b_search(int clan);
-	bool rb_search(int clan, int l, int h);
+	bool l_search(T clan);
+	bool b_search(T clan);
+	bool rb_search(T clan, int l, int h);
 	void reverse();
 
 	Array&operator=(const Array &that);
