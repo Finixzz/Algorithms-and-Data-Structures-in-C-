@@ -88,7 +88,7 @@ void Array<T>::Delete(int index) {
 	}
 }
 template<class T>
-bool Array<T>::l_search(int clan) {
+bool Array<T>::l_search(T clan) {
 	for (int i = 0; i < len; i++) {
 		if (A[i] == clan)
 			return true;
@@ -96,7 +96,7 @@ bool Array<T>::l_search(int clan) {
 	return false;
 }
 template<class T>
-bool Array<T>::b_search(int clan) {
+bool Array<T>::b_search(T clan) {
 	int l = 0; int h = len;
 	int mid;
 	while (l <= h) {
@@ -111,7 +111,7 @@ bool Array<T>::b_search(int clan) {
 	return false;
 }
 template<class T>
-bool Array<T>::rb_search(int clan, int l, int h) {
+bool Array<T>::rb_search(T clan, int l, int h) {
 	static int br = 0;
 	if (l <= h) {
 		int mid = (l + h) / 2;
