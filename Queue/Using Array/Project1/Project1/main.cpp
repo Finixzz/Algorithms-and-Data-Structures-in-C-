@@ -40,7 +40,7 @@ int Queue::dequeue() {
 	return Q[front];
 }
 int Queue::isEmpty() {
-	return front == size - 1;
+	return front == rear;
 }
 int Queue::isFull() {
 	return rear == size - 1;
